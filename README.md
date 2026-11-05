@@ -1,3 +1,24 @@
+# Kalshi orderbook collector, submission by Irfan Ullah
+
+Start with [NOTES.md](NOTES.md): design, the three invariants, every decision worth
+defending, the four extensions and the known limits. [LATENCY.md](LATENCY.md) has the
+measured connection-setup numbers and the method.
+
+```
+cargo test --release                        # 26 tests, no network needed
+MOCK=1 OUTPUT_PATH=stream.sbe cargo run --release   # offline, synthetic traffic
+KALSHI_API_KEY_ID=... KALSHI_PRIVATE_KEY_PATH=key.pem OUTPUT_PATH=stream.sbe \
+  cargo run --release                       # live Kalshi
+```
+
+Layout: `feed.rs` and `kalshi/` talk to the venue, `supervisor.rs` owns shards, standby
+sockets and promotion, `book.rs` holds the order book maths, `pipeline.rs` is the single
+writer, `sink.rs` writes the SBE chunks, `polymarket/` is the second-venue adapter.
+
+Everything below is the starter repository's own README.
+
+---
+
 # Read before getting started!!
 
 First, read [src/main.rs](https://github.com/voluntas-io/engineering-challenge/blob/main/src/main.rs). Then, some background on this repo:
